@@ -102,12 +102,50 @@ describe('GET /todos/:id', () => {
       .end(done);
   });
 
-  it('Should return a 404 for non-object ids', (done) => {
+  it('Should return a 404 if object id is invalid', (done) => {
     request(app)
       .get(`/todos/123`)
       .expect(404)
       .end(done);
   });
+})
+
+describe('DELETE /todos/:id', () => {
+  it('Should remove a todo', (done) => {
+    let id = todos[1]._id.toHexString()
+    request(app)
+      .delete(`/todos/${id}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo._id).toBe(id)
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        };
+
+        Todo.findById(id)
+          .then((todo) => {
+            expect(todo).toNotExist;
+            done();
+          })
+          .catch(e => done(e))
+      })
+  })
+
+  it('Should return a 404 if todo not found', (done) => {
+       request(app)
+        .delete(`/todos/${new ObjectID()}`)
+        .expect(404)
+        .end(done);
+  })
+
+  it('Should return a 404 if object id is invalid', (done) => {
+    request(app)
+      .get(`/todos/123`)
+      .expect(404)
+      .end(done);
+  })
 })
 
 // N O T E S   F O R   P A C K A G E . J S O N   T E S T
