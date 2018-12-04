@@ -1,3 +1,5 @@
+require('./config/config')
+
 // local imports
 const { mongoose } = require('./db/mongoose')
 const { Todo } = require('./models/todo')
@@ -12,8 +14,7 @@ const _ = require('lodash')
 // starts the express app
 let app = express();
 
-// sets up the port env variable for deployment || stays on 3000 for dev
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 // setting up middleware. we can now send json to our express app
 app.use(bodyParser.json())

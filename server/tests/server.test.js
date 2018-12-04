@@ -151,8 +151,9 @@ describe('DELETE /todos/:id', () => {
 })
 
 describe('PATCH /todos/:id', () => {
+
   it('Should update the todo', (done) => {
-    let id = todos[0]._id.toHexString()
+    let id = todos[0]._id
     let text = "updated text"
 
     request(app)
@@ -160,6 +161,7 @@ describe('PATCH /todos/:id', () => {
       .send({text, completed: true})
       .expect(200)
       .expect(res => {
+        console.log(res)
         expect(res.body.todo.text).toBe(text)
         expect(res.body.todo.completed).toBe(true)
         expect(typeof res.body.todo.completedAt).toBe('number')
