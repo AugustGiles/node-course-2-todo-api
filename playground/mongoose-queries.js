@@ -16,24 +16,24 @@ User.findById(userId)
 
 // practice on using find methods on the models
 
-// let id = '5c01df8373c931165fe4fdb41'
+let id = '5c01df8373c931165fe4fdb41'
 
 // mongoose converts the id's into strings for us!
-// Todo.find({_id: id})
-//   .then(todos => console.log('Todos', todos))
-//
-// Todo.findOne({_id: id})
-//   .then(todo => console.log('Todo', todo))
+Todo.find({_id: id})
+  .then(todos => console.log('Todos', todos))
 
-// if (!ObjectID.isValid(id)) {
-//   console.log('ID is not valid')
-// }
-//
-// Todo.findById(id)
-//   .then(todo => {
-//     if (!todo) {
-//       return console.log('ID not found')
-//     }
-//     console.log('Todo', todo)
-//   })
-//   .catch(e => console.log(e.message))
+Todo.findOne({_id: id})
+  .then(todo => console.log('Todo', todo))
+
+if (!ObjectID.isValid(id)) {
+  console.log('ID is not valid')
+}
+
+Todo.findById(id)
+  .then(todo => {
+    if (!todo) {
+      return console.log('ID not found')
+    }
+    console.log('Todo', todo)
+  })
+  .catch(e => console.log(e.message))
