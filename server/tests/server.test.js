@@ -11,7 +11,9 @@ let todos = [{
   text: 'First Test Todo'
 }, {
   _id: new ObjectID(),
-  text: 'Second Test Todo'
+  text: 'Second Test Todo',
+  completed: true,
+  completedAt: 333,
 }];
 
 // beforeEach is a lifecycle method that is obviously called before each test.
@@ -147,6 +149,41 @@ describe('DELETE /todos/:id', () => {
       .end(done);
   })
 })
+
+describe('PATCH /todos/:id', () => {
+  it('Should update the todo', (done) => {
+    let id = todos[0]._id.toHexString()
+    let text = "updated text"
+
+    request(app)
+      .patch(`/todos/${id}`)
+      .send({text, completed: true})
+      .expect(200)
+      .expect(res => {
+        expect(res.body.todo.text).toBe(text)
+        expect(res.body.todo.completed).toBe(true)
+        expect(typeof res.body.todo.completedAt).toBe('number')
+      })
+      .end(done);
+  });
+
+  it('Should clear completed at when todo is not completed', (done) => {
+    let id = todos[1]._id.toHexString()
+    let text = 'more new text'
+
+    request(app)
+      .patch(`/todos/${id}`)
+      .send({text, completed: false})
+      .expect(200)
+      .expect(res => {
+        expect(res.body.todo.text).toBe(text);
+        expect(res.body.todo.completed).toBe(false);
+        expect(res.body.todo.completedAt).toBeFalsy();
+      })
+
+      .end(done);
+  });
+});
 
 // N O T E S   F O R   P A C K A G E . J S O N   T E S T
 // down in test and test-watch - those are custom scripts so if I run
