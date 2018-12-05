@@ -32,7 +32,8 @@ let UserSchema = new mongoose.Schema({
   }]
 })
 
-// controlls what the user will see when the data is returned
+// makes instance methods
+// controls what the user will see when the data is returned. will not return a password... etc
 UserSchema.methods.toJSON = function() {
   let user = this;
   let userObject = user.toObject()
@@ -52,6 +53,30 @@ UserSchema.methods.generateAuthToken = function() {
     return token;
   });
 };
+
+// this makes model methods
+UserSchema.statics.findByToken = function(token) {
+  let User = this;
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, 'secret value')
+  } catch(e) {
+    // return new Promise((res, rej) => {
+    //   reject();
+    // });
+
+    // shortcut for returning a promise with e automatically
+    return Promise.reject();
+  };
+
+  return User.findOne({
+    '_id': decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
+  })
+
+}
 
 let User = mongoose.model('User', UserSchema);
 
