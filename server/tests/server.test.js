@@ -223,7 +223,8 @@ describe('POST /users', () => {
             expect(user).toBeTruthy();
             expect(user.password).not.toBe(password);
             done();
-          });
+          })
+          .catch(e => done(e));
       });
   });
 
@@ -250,6 +251,59 @@ describe('POST /users', () => {
   });
 
 });
+
+describe('POST /users/login', () => {
+
+  it('Should login user and return auth token', (done) => {
+    request(app)
+      .post('/users/login')
+      .send({
+        email: users[1].email,
+        password: users[1].password
+      })
+      .expect(200)
+      .expect(res => {
+        expect(res.headers['x-auth']).toBeTruthy();
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        };
+        User.findById(users[1]._id)
+          .then(user => {
+            expect(user.tokens[0]).toHaveProperty('access', 'auth')
+            expect(user.tokens[0]).toHaveProperty('token', user.tokens[0].token)
+            done()
+          })
+          .catch(e => done(e));
+      })
+  })
+
+  it('Should reject invalid login', (done) => {
+    request(app)
+      .post('/users/login')
+      .send({
+        email: users[1].email,
+        password: '123123123'
+      })
+      .expect(400)
+      .expect(res => {
+        expect(res.headers['x-auth']).toBeFalsy();
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        };
+        User.findById(users[1]._id)
+          .then(user => {
+            expect(user.tokens.length).toBe(0);
+            done();
+          })
+          .catch(e => done(e));
+      });
+  })
+
+})
 
 
 // N O T E S   F O R   P A C K A G E . J S O N   T E S T
