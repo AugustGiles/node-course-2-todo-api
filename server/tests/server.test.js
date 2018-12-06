@@ -276,8 +276,8 @@ describe('POST /users/login', () => {
             done()
           })
           .catch(e => done(e));
-      })
-  })
+      });
+  });
 
   it('Should reject invalid login', (done) => {
     request(app)
@@ -301,9 +301,11 @@ describe('POST /users/login', () => {
           })
           .catch(e => done(e));
       });
-  })
+  });
 
-})
+});
+
+
 
 
 // N O T E S   F O R   P A C K A G E . J S O N   T E S T

@@ -55,6 +55,19 @@ UserSchema.methods.generateAuthToken = function() {
   });
 };
 
+// on the mongo update method, we use $pull to pull any token from the token
+//    array where the token value is the same as the value being given
+//    update returns promise
+UserSchema.methods.removeToken = function(token) {
+  let user = this;
+
+  return user.update({
+    $pull: {
+      tokens: { token }
+    }
+  })
+}
+
 // this makes model methods
 UserSchema.statics.findByToken = function(token) {
   let User = this;
