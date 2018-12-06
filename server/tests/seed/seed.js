@@ -4,15 +4,6 @@ const { User } = require('../../models/user')
 
 const jwt = require('jsonwebtoken')
 
-const todos = [{
-  _id: new ObjectID(),
-  text: 'First Test Todo'
-}, {
-  _id: new ObjectID(),
-  text: 'Second Test Todo',
-  completed: true,
-  completedAt: 333,
-}];
 
 const user1ID = new ObjectID
 const user2ID = new ObjectID
@@ -27,7 +18,23 @@ const users = [{
 }, {
   _id: user2ID,
   email: 'lauren@example.com',
-  password: 'user2pass'
+  password: 'user2pass',
+  tokens: [{
+    access: 'auth',
+    token: jwt.sign({_id: user2ID, access: 'auth'}, 'secret value').toString()
+  }]
+}];
+
+const todos = [{
+  _id: new ObjectID(),
+  text: 'First Test Todo',
+  _creator: user1ID
+}, {
+  _id: new ObjectID(),
+  text: 'Second Test Todo',
+  completed: true,
+  completedAt: 333,
+  _creator: user2ID
 }];
 
 // wipes all todos
